@@ -1,0 +1,29 @@
+<header class="site-header">
+  <a class="brand" routerLink="/" (click)="closeNavigation()" [attr.aria-label]="store.content().pages[0].title + ' Main Menu'">
+    <span class="brand-mark"><span>M</span></span>
+    <span class="brand-name">{{ store.content().pages[0].title }}<small>PERSONAL PORTFOLIO</small></span>
+  </a>
+
+  <button
+    class="menu-toggle"
+    type="button"
+    [attr.aria-expanded]="navigationOpen()"
+    aria-label="メニューを開閉"
+    (click)="toggleNavigation()">
+    <span></span><span></span>
+  </button>
+
+  <nav class="main-navigation" [class.nav-open]="navigationOpen()" aria-label="メインメニュー">
+    @for (page of store.content().pages; track page.id) {
+      <a
+        [routerLink]="page.id === 'main' ? '/' : '/' + page.id"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: page.id === 'main' }"
+        (click)="closeNavigation()">{{ page.label }}</a>
+    }
+  </nav>
+
+  <div class="header-note"><span></span> PERSONAL BRAND / 2026</div>
+</header>
+
+<router-outlet />

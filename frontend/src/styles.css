@@ -1,0 +1,32 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: #080a0f;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: #f5f7fb;
+  background: #080a0f;
+  font-family: "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: #071014;
+  background: #73f5df;
+}

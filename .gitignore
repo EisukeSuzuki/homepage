@@ -1,0 +1,13 @@
+# .NET
+**/bin/
+**/obj/
+
+# Node / Angular
+**/node_modules/
+**/dist/
+**/.angular/
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea/

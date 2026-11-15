@@ -1,0 +1,337 @@
+<main class="page-shell" [attr.data-layout]="page().layout">
+  <button class="edit-page-button" type="button" (click)="startEditing()">
+    <span aria-hidden="true">✳</span> このページを編集
+  </button>
+
+  @switch (page().layout) {
+    @case ('home') {
+      <section class="home-hero">
+        <div class="home-copy">
+          <p class="eyebrow"><span class="eyebrow-mark"></span>{{ page().eyebrow }}</p>
+          <h1>{{ page().title }}<span class="hello-wave" aria-hidden="true">👋</span></h1>
+          <p class="home-intro">{{ page().subtitle }}</p>
+          <p class="home-description">{{ page().description }}</p>
+          <a class="signature" routerLink="/profile" aria-label="プロフィールを見る">{{ page().title }}<span>→ プロフィールへ</span></a>
+        </div>
+        <div class="home-portrait">
+          <img [src]="page().image" [alt]="page().title + ' のプロフィール写真'" />
+          <div class="portrait-caption"><span>LEADERSHIP · CREATIVITY · IMPACT</span><strong>01 / 06</strong></div>
+          <span class="portrait-frame portrait-frame-top"></span>
+          <span class="portrait-frame portrait-frame-bottom"></span>
+        </div>
+        <div class="home-socials">
+          <span>CONNECT</span>
+          @for (social of store.content().socialLinks; track social.label) {
+            @if (social.url) {
+              <a [href]="social.url" target="_blank" rel="noopener noreferrer">{{ social.label }} ↗</a>
+            }
+          }
+        </div>
+        <span class="home-scroll">SCROLL TO EXPLORE ↓</span>
+      </section>
+
+      <section class="partner-rail" aria-label="パートナーブランド">
+        @for (block of page().blocks; track $index) {
+          <div class="partner-wordmark">
+            <strong>{{ block.title }}</strong><span>{{ block.description }}</span>
+          </div>
+        }
+      </section>
+
+      <section class="home-menu-section">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-mark"></span>EXPLORE THE PORTFOLIO</p>
+            <h2>{{ page().sectionHeading }}</h2>
+          </div>
+          <p>{{ page().sectionIntro }}</p>
+        </div>
+        <div class="home-menu-grid">
+          @for (item of store.content().pages; track item.id; let index = $index) {
+            @if (item.id !== 'main') {
+              <a class="home-menu-card" [routerLink]="'/' + item.id">
+                <span>0{{ index }}</span>
+                <strong>{{ item.label }}</strong>
+                <small>{{ item.subtitle }}</small>
+                <b aria-hidden="true">↗</b>
+              </a>
+            }
+          }
+        </div>
+      </section>
+    }
+
+    @case ('profile') {
+      <section class="profile-page">
+        <header class="inner-page-heading">
+          <p class="eyebrow"><span class="eyebrow-mark"></span>{{ page().eyebrow }}</p>
+          <h1>{{ page().label }}</h1>
+          <p>{{ page().subtitle }}</p>
+        </header>
+
+        <div class="profile-feature">
+          <div class="profile-photo"><img [src]="page().image" [alt]="page().label + ' portrait'" /></div>
+          <div class="profile-biography">
+            <p class="eyebrow"><span class="eyebrow-mark"></span>{{ page().sectionHeading }}</p>
+            <h2>{{ page().title }}</h2>
+            <p class="profile-description">{{ page().description }}</p>
+            <p class="profile-intro">{{ page().sectionIntro }}</p>
+            <div class="education-list">
+              @for (block of page().blocks; track $index; let index = $index) {
+                <article class="education-item">
+                  <span class="education-icon">{{ (index + 1).toString().padStart(2, '0') }}</span>
+                  <div>
+                    <h3>{{ block.title }}</h3>
+                    <p>{{ block.description }}</p>
+                    @if (block.eyebrow) {
+                      <span>{{ block.eyebrow }}</span>
+                    }
+                  </div>
+                </article>
+              }
+            </div>
+          </div>
+        </div>
+
+        <section class="profile-closing">
+          <span>THE NEXT CHAPTER</span>
+          <h2>{{ page().closingHeading }}</h2>
+        </section>
+      </section>
+    }
+
+    @case ('mission') {
+      <section class="mission-page">
+        <header class="mission-heading">
+          <p class="eyebrow"><span class="eyebrow-mark"></span>{{ page().eyebrow }}</p>
+          <h1>{{ page().sectionHeading }}</h1>
+          <span class="heading-rule"></span>
+          <p>{{ page().sectionIntro }}</p>
+        </header>
+
+        <div class="mission-stories">
+          @for (block of page().blocks; track $index; let index = $index) {
+            <article class="mission-story" [class.mission-story-reversed]="index % 2 === 1">
+              <div class="mission-copy">
+                <p class="eyebrow"><span class="eyebrow-mark"></span>{{ block.eyebrow }}</p>
+                <h2>{{ block.title }}</h2>
+                <p>{{ block.description }}</p>
+              </div>
+              <img [src]="block.image" [alt]="block.alt" />
+            </article>
+          }
+        </div>
+      </section>
+    }
+
+    @case ('achievements') {
+      <section class="gallery-page achievements-page">
+        <header class="inner-page-heading">
+          <p class="eyebrow"><span class="eyebrow-mark"></span>{{ page().eyebrow }}</p>
+          <h1>{{ page().title }}</h1>
+          <p>{{ page().description }}</p>
+        </header>
+        <div class="gallery-intro">
+          <h2>{{ page().sectionHeading }}</h2>
+          <p>{{ page().sectionIntro }}</p>
+        </div>
+        <div class="achievement-grid">
+          @for (block of page().blocks; track $index; let index = $index) {
+            <article class="achievement-tile" [class]="'achievement-tile kind-' + block.kind + ' size-' + block.size + ' tile-' + index">
+              @if (block.kind === 'photo') {
+                <img [src]="block.image" [alt]="block.alt || block.title" />
+                @if (block.title || block.description) {
+                  <div class="photo-caption"><strong>{{ block.title }}</strong><span>{{ block.description }}</span></div>
+                }
+              } @else {
+                @if (block.kind === 'stat') {
+                  <span class="tile-symbol" aria-hidden="true">✳</span>
+                  <strong class="metric">{{ block.metric }}</strong>
+                }
+                <div class="tile-copy">
+                  <span class="tile-eyebrow">{{ block.eyebrow }}</span>
+                  <h3>{{ block.title }}</h3>
+                  <p>{{ block.description }}</p>
+                </div>
+              }
+            </article>
+          }
+        </div>
+      </section>
+    }
+
+    @case ('companies') {
+      <section class="gallery-page companies-page">
+        <header class="inner-page-heading">
+          <p class="eyebrow"><span class="eyebrow-mark"></span>{{ page().eyebrow }}</p>
+          <h1>{{ page().title }}</h1>
+          <p>{{ page().subtitle }}</p>
+          <span class="company-description">{{ page().description }}</span>
+        </header>
+        <div class="gallery-intro">
+          <h2>{{ page().sectionHeading }}</h2>
+          <p>{{ page().sectionIntro }}</p>
+        </div>
+        <div class="company-grid">
+          @for (block of page().blocks; track $index) {
+            <article class="company-tile" [class]="'company-tile kind-' + block.kind + ' size-' + block.size">
+              @if (block.kind === 'photo') {
+                <img [src]="block.image" [alt]="block.alt || block.title" />
+                @if (block.title || block.description) {
+                  <div class="company-photo-caption"><strong>{{ block.title }}</strong><span>{{ block.description }}</span></div>
+                }
+              } @else {
+                <div class="company-wordmark">
+                  <span>{{ block.eyebrow }}</span>
+                  <strong>{{ block.title }}</strong>
+                  <small>{{ block.description }}</small>
+                </div>
+              }
+            </article>
+          }
+        </div>
+      </section>
+    }
+
+    @case ('hobby') {
+      <section class="gallery-page hobby-page">
+        <header class="inner-page-heading">
+          <p class="eyebrow"><span class="eyebrow-mark"></span>{{ page().eyebrow }}</p>
+          <h1>{{ page().title }}</h1>
+          <p>{{ page().subtitle }}</p>
+        </header>
+        <div class="gallery-intro">
+          <h2>{{ page().sectionHeading }}</h2>
+          <p>{{ page().sectionIntro }}</p>
+        </div>
+        <div class="hobby-grid">
+          @for (block of page().blocks; track $index) {
+            <article class="hobby-tile" [class]="'hobby-tile kind-' + block.kind + ' size-' + block.size">
+              @if (block.kind === 'photo') {
+                <img [src]="block.image" [alt]="block.alt || block.title" />
+                @if (block.title || block.description) {
+                  <div class="hobby-photo-caption"><strong>{{ block.title }}</strong><span>{{ block.description }}</span></div>
+                }
+              } @else if (block.kind === 'brand') {
+                <div class="hobby-brand">
+                  <span>✳</span><strong>{{ block.title }}</strong><small>{{ block.description }}</small>
+                </div>
+              } @else {
+                @if (block.image) {
+                  <img [src]="block.image" [alt]="block.alt || block.title" />
+                }
+                <div class="hobby-copy">
+                  <span class="tile-eyebrow">{{ block.eyebrow }}</span>
+                  @if (block.metric) {
+                    <strong class="metric">{{ block.metric }}</strong>
+                  }
+                  <h3>{{ block.title }}</h3>
+                  <p>{{ block.description }}</p>
+                </div>
+              }
+            </article>
+          }
+        </div>
+      </section>
+    }
+  }
+
+  <footer class="site-footer">
+    <a class="footer-brand" routerLink="/"><span>M</span> {{ store.content().pages[0].title }}</a>
+    <nav class="footer-socials" aria-label="SNSリンク">
+      @for (social of store.content().socialLinks; track social.label) {
+        @if (social.url) {
+          <a [href]="social.url" target="_blank" rel="noopener noreferrer">{{ social.label }} ↗</a>
+        }
+      }
+    </nav>
+    <p>© {{ currentYear }} {{ store.content().pages[0].title }}. ALL RIGHTS RESERVED.</p>
+    <button class="back-to-top" type="button" (click)="scrollToTop()">BACK TO TOP ↑</button>
+  </footer>
+</main>
+
+@if (editing()) {
+  <div class="editor-backdrop" (click)="editing.set(false)">
+    <section class="editor-panel" role="dialog" aria-modal="true" aria-labelledby="editor-heading" (click)="$event.stopPropagation()">
+      <div class="editor-heading">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-mark"></span>PERSONALIZE YOUR SITE</p>
+          <h2 id="editor-heading">ページを編集</h2>
+        </div>
+        <button class="close-editor" type="button" aria-label="編集を閉じる" (click)="editing.set(false)">×</button>
+      </div>
+
+      <form (ngSubmit)="save()">
+        <label>メニュー名<input name="label" [(ngModel)]="draft.label" required /></label>
+        <label>英字の見出し<input name="eyebrow" [(ngModel)]="draft.eyebrow" /></label>
+        <label>ページタイトル<input name="title" [(ngModel)]="draft.title" /></label>
+        <label>サブタイトル<input name="subtitle" [(ngModel)]="draft.subtitle" /></label>
+        <label>紹介文<textarea name="description" rows="3" [(ngModel)]="draft.description"></textarea></label>
+        <label>セクション見出し<input name="sectionHeading" [(ngModel)]="draft.sectionHeading" /></label>
+        <label>セクション紹介文<textarea name="sectionIntro" rows="3" [(ngModel)]="draft.sectionIntro"></textarea></label>
+        <label>最後の見出し<input name="closingHeading" [(ngModel)]="draft.closingHeading" /></label>
+        @if (draft.image) {
+          <label>プロフィール画像のURLまたはパス<input name="image" [(ngModel)]="draft.image" placeholder="/images/profile-portrait.png" /></label>
+          <label class="upload-label">またはプロフィール画像を変更
+            <input type="file" accept="image/*" (change)="onImageSelected($event)" />
+            <span>1.5MB以下の画像を選択してください</span>
+          </label>
+        }
+
+        <div class="editor-divider"></div>
+        <div class="blocks-editor-heading">
+          <p class="social-editor-title">ページ内の項目・写真</p>
+          <button type="button" class="add-block-button" (click)="addBlock()">＋ 項目を追加</button>
+        </div>
+        @for (block of draftBlocks; track $index; let index = $index) {
+          <fieldset class="content-block-editor">
+            <legend>項目 {{ index + 1 }}</legend>
+            <label>種類
+              <select [attr.name]="'kind-' + index" [ngModelOptions]="{ standalone: true }" [(ngModel)]="block.kind">
+                <option value="story">文章</option>
+                <option value="photo">写真</option>
+                <option value="stat">実績・数字</option>
+                <option value="brand">ブランド名</option>
+              </select>
+            </label>
+            <label>見出し<input [attr.name]="'block-title-' + index" [ngModelOptions]="{ standalone: true }" [(ngModel)]="block.title" /></label>
+            <label>説明・サブタイトル<textarea [attr.name]="'block-description-' + index" [ngModelOptions]="{ standalone: true }" rows="3" [(ngModel)]="block.description"></textarea></label>
+            @if (block.kind === 'story') {
+              <label>英字の見出し<input [attr.name]="'block-eyebrow-' + index" [ngModelOptions]="{ standalone: true }" [(ngModel)]="block.eyebrow" /></label>
+            }
+            @if (block.kind === 'stat') {
+              <label>数字<input [attr.name]="'block-metric-' + index" [ngModelOptions]="{ standalone: true }" [(ngModel)]="block.metric" /></label>
+              <label>英字の見出し<input [attr.name]="'block-eyebrow-' + index" [ngModelOptions]="{ standalone: true }" [(ngModel)]="block.eyebrow" /></label>
+            }
+            @if (block.kind === 'photo' || block.image) {
+              <label>写真のURLまたはパス<input [attr.name]="'block-image-' + index" [ngModelOptions]="{ standalone: true }" [(ngModel)]="block.image" /></label>
+              <label>写真の説明（alt）<input [attr.name]="'block-alt-' + index" [ngModelOptions]="{ standalone: true }" [(ngModel)]="block.alt" /></label>
+              <label class="upload-label">写真をアップロード
+                <input type="file" accept="image/*" (change)="onImageSelected($event, index)" />
+              </label>
+            }
+            <button type="button" class="remove-block-button" (click)="removeBlock(index)">この項目を削除</button>
+          </fieldset>
+        }
+
+        <div class="editor-divider"></div>
+        <p class="social-editor-title">SNSリンク</p>
+        @for (social of draftSocialLinks; track $index) {
+          <div class="social-editor-row">
+            <label>{{ social.label }} の表示名<input [attr.name]="'social-label-' + $index" [ngModelOptions]="{ standalone: true }" [(ngModel)]="social.label" /></label>
+            <label>URL<input [attr.name]="'social-url-' + $index" [ngModelOptions]="{ standalone: true }" type="url" [(ngModel)]="social.url" /></label>
+          </div>
+        }
+
+        @if (error()) {
+          <p class="editor-error" role="alert">{{ error() }}</p>
+        }
+
+        <div class="editor-actions">
+          <button class="primary-button" type="submit">変更を保存</button>
+          <button class="reset-button" type="button" (click)="restoreDefaults()">初期状態に戻す</button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
