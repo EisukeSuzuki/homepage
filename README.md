@@ -25,6 +25,10 @@ npm start
 
 API の疎通確認: `http://localhost:5080/api/health`
 
+## Vercel へのデプロイ
+
+Vercel の Project Settings で Root Directory をリポジトリのルート（`./`）に設定してデプロイします。ルートの `vercel.json` が `frontend` の Angular アプリをビルドし、SPA の各 URL を `index.html` にルーティングします。
+
 ## ページ
 
 - Main Menu: `/`
